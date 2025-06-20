@@ -1,6 +1,8 @@
+
+
 // === CONFIGURATION ===
-const AIRTABLE_BASE_ID = "appisb00ZAuU3fJeQ"; // Your base ID
-const AIRTABLE_TABLE_NAME = "Accounts";       // Make sure this matches your Airtable table
+const AIRTABLE_BASE_ID = "appisb00ZAuU3fJeQ";
+const AIRTABLE_TABLE_NAME = "AccountsDB"; // Use your table name
 const AIRTABLE_TOKEN = "patpATMJbSIJqRT6I.4aaa59fb8adbbdfe037c481daec30f0221d1eef4f8ace937cb3a399b9951072b";
 
 let currentUser = null;
@@ -31,7 +33,7 @@ function register() {
     return;
   }
   // Check if user/email already exists
-  fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_NAME}?filterByFormula=OR({Email}='${email}',{Name}='${username}')`, {
+  fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_NAME}?filterByFormula=OR({Name}='${username}',{Email}='${email}')`, {
     headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` }
   })
   .then(res => res.json())
@@ -50,7 +52,7 @@ function register() {
           fields: {
             Name: username,
             Email: email,
-            Pass: password, // Plaintext for demo only!
+            Pass: password,
             Points: 0
           }
         })
@@ -87,7 +89,7 @@ function login() {
       document.getElementById("auth-forms").style.display = "none";
       document.getElementById("dashboard").style.display = "";
       document.getElementById("user-name").textContent = currentUser.Name;
-      document.getElementById("user-points").textContent = currentUser.Points;
+      document.getElementById("user-points").textContent = currentUser.Points || 0;
       showMsg("");
       clearForms();
     } else {
