@@ -31,13 +31,13 @@ function register() {
     return;
   }
   // Check if user/email already exists
-  fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_NAME}?filterByFormula=OR({Email}='${email}',{Username}='${username}')`, {
+  fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_NAME}?filterByFormula=OR({Email}='${email}',{Name}='${username}')`, {
     headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` }
   })
   .then(res => res.json())
   .then(data => {
     if (data.records && data.records.length > 0) {
-      showMsg("Username or Email already exists.", "red");
+      showMsg("Name or Email already exists.", "red");
     } else {
       // Register new user
       fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_NAME}`, {
@@ -48,9 +48,9 @@ function register() {
         },
         body: JSON.stringify({
           fields: {
-            Username: username,
+            Name: username,
             Email: email,
-            Password: password, // Plaintext for demo only!
+            Pass: password, // Plaintext for demo only!
             Points: 0
           }
         })
@@ -76,7 +76,7 @@ function login() {
     showMsg("Please enter email and password.");
     return;
   }
-  fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_NAME}?filterByFormula=AND({Email}='${email}',{Password}='${password}')`, {
+  fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_NAME}?filterByFormula=AND({Email}='${email}',{Pass}='${password}')`, {
     headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` }
   })
   .then(res => res.json())
@@ -86,7 +86,7 @@ function login() {
       currentRecordId = data.records[0].id;
       document.getElementById("auth-forms").style.display = "none";
       document.getElementById("dashboard").style.display = "";
-      document.getElementById("user-name").textContent = currentUser.Username;
+      document.getElementById("user-name").textContent = currentUser.Name;
       document.getElementById("user-points").textContent = currentUser.Points;
       showMsg("");
       clearForms();
